@@ -3,6 +3,7 @@ export const REPORT_OPTIONS = [
         "id":"1",
         "title":"ACCIDENT",
         "description":""
+        
     },
     {
         "id":"2",
@@ -26,11 +27,21 @@ export const REPORT_OPTIONS = [
     },
     {
         "id":"6",
-        "title":"NATURAL DISASTER",
+        "title":"DRIVER ASSISTANCE",
         "description":""
     },
     {
         "id":"7",
+        "title":"MEDICAL EMERGENCY",
+        "description":""
+    },
+    {
+        "id":"8",
+        "title":"CHILD MISSING",
+        "description":""
+    },
+    {
+        "id":"9",
         "title":"FIRE",
         "description":""
     },

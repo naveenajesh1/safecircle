@@ -1,28 +1,45 @@
-/**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
- */
+// Define tint colors for light and dark themes
+const tintColorLight = 'teal'; // Closest to #0a7ea4
+const tintColorDark = 'white'; // White for dark mode contrast
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
-
+// Export the Colors object containing theme definitions
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
-    headerbackground:'rgb(242,242,242)',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
+    colors: {
+      primary: 'dodgerblue', // Primary theme color (bright blue)
+      accent: 'orange', // Accent color used for highlights
+      background: 'white', // Background color for light mode
+      surface: 'lightgray', // Surface color for UI elements
+      text: 'black', // Default text color for readability
+      onSurface: 'black', // Text color on surfaces (buttons, cards, etc.)
+      error: 'red', // Color used for errors and warnings
+      headerBackground: 'white', // Background color for headers
+      tint: 'deepskyblue', // Used for icons and selection highlights
+      icon: 'gray', // Default color for icons
+      tabIconDefault: 'silver', // Default color for inactive tab icons
+      tabIconSelected: 'deepskyblue', // Highlight color for active tab icons
+      level3: 'gainsboro', // Light gray used for subtle UI elements
+    },
+    roundness: 4, // Border radius for rounded elements
+    spacing: 8, // Standard spacing unit for margins/padding
   },
   dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    headerbackground:'rgb(1,1,1)',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
+    colors: {
+      primary: 'mediumseagreen', // Greenish-blue for dark mode primary color
+      accent: 'darkorange', // Orange accent color for contrast
+      background: 'black', // Background color for dark mode
+      surface: 'dimgray', // Dark gray surface color for UI elements
+      text: 'white', // White text for readability
+      onSurface: 'white', // White text on surface elements
+      error: 'red', // Error color remains red for visibility
+      headerBackground: 'dimgray', // Darker background for headers
+      tint: 'white', // Tint color for icons in dark mode
+      icon: 'white', // White icons for visibility
+      tabIconDefault: 'darkgray', // Default color for inactive tab icons
+      tabIconSelected: 'white', // Active tab icons are highlighted in white
+      level3: 'darkslategray', // Darker gray for subtle UI elements
+    },
+    roundness: 4, // Border radius for rounded elements
+    spacing: 8, // Standard spacing unit
   },
 };

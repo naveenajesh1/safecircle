@@ -12,7 +12,9 @@
     "**/*.ts",
     "**/*.tsx",
     "**/*.jsx",
+    "safecircle-frontend/.expo/types/**/*.ts",
+    "safecircle-frontend/expo-env.d.ts",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-,   ]
+  ]
 }
