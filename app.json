@@ -9,14 +9,29 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "We need access to your location to send emergency alerts.",
+        "NSLocationAlwaysUsageDescription": "We need access to your location to send emergency alerts even when the app is in the background."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
-    },
+      },
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
+    }, 
+      "expo": {
+        "ios": {
+          "infoPlist": {
+            "NSLocationWhenInUseUsageDescription": "We need your location to send emergency alerts with your live location."
+          }
+        }
+      },
     "web": {
       "bundler": "metro",
       "output": "static",
@@ -38,4 +53,5 @@
       "typedRoutes": true
     }
   }
+  
 }

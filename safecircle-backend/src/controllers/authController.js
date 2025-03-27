@@ -38,17 +38,19 @@ exports.registerUser = async (req, res) => {
 // Login User
 exports.loginUser = async (req, res) => {
     try {
+        console.log("heyy there");
         const { email, password } = req.body;
 
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({ message: "Invalid credentials" });
         }
-
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ message: "Invalid credentials" });
-        }
+        console.log("heyy there2");
+        console.log("User password:", password);
+        
+        const match = await bcrypt.compare(req.body.password, user.password);
+        if (!match) return res.status(404).json({ message: "Username or password is incorrect!" });
+        console.log("heyy there3");
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "30d" });
         res.json({ message: "Login successful", token });

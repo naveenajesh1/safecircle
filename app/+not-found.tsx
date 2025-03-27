@@ -1,4 +1,5 @@
-import { Link, Stack } from 'expo-router';
+import { Stack } from 'expo-router';
+import Link from 'expo-router/link'; // Correct import for Link
 import React from 'react';
 import { StyleSheet } from 'react-native';
 

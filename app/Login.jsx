@@ -22,11 +22,12 @@ export default function LoginScreen({ navigation }) {
       if (isLogin) {
         await login(email, password);
         Alert.alert('Success', 'Logged in successfully!');
+        navigation.navigate('profile'); // Redirect to the profile page
       } else {
         await register({ name, address, aadhar, phone, email, dob, gender, password });
         Alert.alert('Success', 'Account created successfully!');
+        setIsLogin(true); // Switch to login mode after successful registration
       }
-      navigation.navigate('profile'); // Redirect after success
     } catch (error) {
       Alert.alert('Error', error);
     }

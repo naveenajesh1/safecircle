@@ -1,6 +1,7 @@
 // Updated User.js model
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+import bcrypt from "bcryptjs";
+
 
 const UserSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -26,5 +27,5 @@ UserSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema , "users");
 

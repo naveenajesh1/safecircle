@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import * as Location from "expo-location";
 import {
   Appearance,
   StyleSheet,
@@ -10,6 +11,8 @@ import {
   Animated,
   ImageBackground,
   StatusBar,
+  Linking,
+  Vibration
 } from "react-native";
 import { Colors } from "@/constants/Colors";
 import Toast from "react-native-toast-message";
@@ -20,10 +23,10 @@ import rctimage from "@/assets/images/a7395e40-2054-4147-8314-728e940a8063.jpg";
 
 // Default emergency options
 const defaultOptions = [
-  { name: "Threat", contacts: ["naveen"], procedure: "Stay Safe!" },
-  { name: "Accident", contacts: ["+9876543210"], procedure: "Call 911" },
-  { name: "Medical Emergency", contacts: [], procedure: "Seek medical help" },
-  { name: "Fire", contacts: [], procedure: "Evacuate immediately" },
+  { name: "Threat", contacts: ["+917909107741"], procedure: "I am under attack by some one please send help!" },
+  { name: "Accident", contacts: ["+919495885244"], procedure: "I had met with an accident , i need help" },
+  { name: "Medical Emergency", contacts: ["+917306804904"], procedure: "Seek medical help" },
+  { name: "Fire", contacts: ["+917994942544"], procedure: " i am surrounded by fire come help" },
   { name: "Natural Disaster", contacts: [], procedure: "Find shelter" },
 ];
 
@@ -52,7 +55,7 @@ export default function EmergencyOptions() {
     }).start();
   }, []);
 
-  const handleSendAlert = (option) => {
+  const handleSendAlert = async (option) => {
     if (option.contacts.length === 0) {
       Toast.show({
         type: "error",
@@ -62,16 +65,75 @@ export default function EmergencyOptions() {
       });
       return;
     }
-
-    console.log(`Sending alert to: ${option.contacts.join(", ")}`);
-
-    Toast.show({
-      type: "success",
-      text1: "ALERT SENT!",
-      text2: `Emergency alert sent to: ${option.contacts.join(", ")}`,
-      position: "center",
+  
+    Vibration.vibrate(500); // Vibrate to indicate the alert is being sent
+  
+    let location = null;
+    try {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        Toast.show({
+          type: "error",
+          text1: "Location Permission Denied",
+          text2: "Cannot fetch location.",
+          position: "center",
+        });
+        return;
+      }
+  
+      location = await Location.getCurrentPositionAsync({});
+    } catch (error) {
+      console.error("Error fetching location:", error);
+      Toast.show({
+        type: "error",
+        text1: "Failed to Get Location",
+        text2: "Please enable GPS and try again.",
+        position: "center",
+      });
+      return;
+    }
+  
+    const { latitude, longitude } = location.coords;
+    const locationLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
+    const message = `----EMERGENCY ALERT-----: ${option.name} - ${option.procedure}\n📍 Location: ${locationLink}`;
+  
+    // Send the message to each contact
+    option.contacts.forEach((phoneNumber) => {
+      const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+  
+      Linking.canOpenURL(url)
+        .then((supported) => {
+          if (!supported) {
+            Toast.show({
+              type: "error",
+              text1: "WhatsApp Not Installed",
+              text2: `Unable to send message to ${phoneNumber}.`,
+              position: "center",
+            });
+          } else {
+            return Linking.openURL(url);
+          }
+        })
+        .then(() => {
+          Toast.show({
+            type: "success",
+            text1: "Message Sent!",
+            text2: `Emergency alert sent to: ${phoneNumber}`,
+            position: "center",
+          });
+        })
+        .catch((err) => {
+          console.error(`Failed to send WhatsApp message to ${phoneNumber}:`, err);
+          Toast.show({
+            type: "error",
+            text1: "Failed to Send Message",
+            text2: `Could not send message to ${phoneNumber}.`,
+            position: "center",
+          });
+        });
     });
   };
+  
 
   const handleEditOption = (item) => {
     setSelectedOption(item);
