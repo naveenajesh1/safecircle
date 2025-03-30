@@ -23,7 +23,7 @@ import rctimage from "@/assets/images/a7395e40-2054-4147-8314-728e940a8063.jpg";
 
 // Default emergency options
 const defaultOptions = [
-  { name: "Threat", contacts: ["+917909107741"], procedure: "I am under attack by some one please send help!" },
+  { name: "Threat", contacts: ["+917909107741"], procedure: " I am under attack by some one please send help!" },
   { name: "Accident", contacts: ["+919495885244"], procedure: "I had met with an accident , i need help" },
   { name: "Medical Emergency", contacts: ["+917306804904"], procedure: "Seek medical help" },
   { name: "Fire", contacts: ["+917994942544"], procedure: " i am surrounded by fire come help" },
@@ -95,7 +95,7 @@ export default function EmergencyOptions() {
   
     const { latitude, longitude } = location.coords;
     const locationLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
-    const message = `----EMERGENCY ALERT-----: ${option.name} - ${option.procedure}\n📍 Location: ${locationLink}`;
+    const message = `--- EMERGENCY ALERT  ---: ${option.name} - ${option.procedure}\n📍 Location: ${locationLink}`;
   
     // Send the message to each contact
     option.contacts.forEach((phoneNumber) => {

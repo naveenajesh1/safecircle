@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { Appearance } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { Colors } from '@/constants/Colors'; // Import your theme constants
+import { AuthProvider } from '@/context/AuthContext'; // Import AuthProvider
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -35,22 +36,24 @@ export default function RootLayout() {
   }
 
   return (
-    // Wrap the app with PaperProvider to provide the theme and other features of react-native-paper
-    <PaperProvider theme={theme}>
-      <Stack
-        screenOptions={{
-          headerStyle: { backgroundColor: theme.colors.headerbackground },  // Make sure to use theme.colors.headerbackground here
-          headerTintColor: theme.colors.text,  // Use theme.colors.text for header text color
-          headerShadowVisible: false,
-        }}
-      >
-        <Stack.Screen name="index" options={{ headerShown: false, title: 'Home' }} />
-        <Stack.Screen name="Report tab" options={{ headerShown: true, title: 'Report', headerTitle: 'Report issue' }} />
-        <Stack.Screen name="contact" options={{ headerShown: true, title: 'Contact', headerTitle: 'Contact' }} />
-        <Stack.Screen name="Login" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" options={{ headerShown: false }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </PaperProvider>
+    <AuthProvider> {/* Wrap everything inside AuthProvider */}
+      <PaperProvider theme={theme}>
+        <Stack
+          screenOptions={{
+            headerStyle: { backgroundColor: theme.colors.headerbackground },
+            headerTintColor: theme.colors.text,
+            headerShadowVisible: false,
+          }}
+        >
+          <Stack.Screen name="index" options={{ headerShown: false, title: 'Home' }} />
+          <Stack.Screen name="Report tab" options={{ headerShown: true, title: 'Report', headerTitle: 'Report issue' }} />
+          <Stack.Screen name="contact" options={{ headerShown: true, title: 'Contact', headerTitle: 'Contact' }} />
+          <Stack.Screen name="Login" options={{ headerShown: false }} />
+          <Stack.Screen name="profile" options={{ headerShown: true, title: 'Profile' }} /> 
+          <Stack.Screen name="+not-found" options={{ headerShown: false }} />
+        </Stack>
+        <StatusBar style="auto" />
+      </PaperProvider>
+    </AuthProvider>
   );
 }

@@ -12,18 +12,8 @@ exports.registerUser = async (req, res) => {
             return res.status(400).json({ message: "User already exists" });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        user = new User({ 
-            name, 
-            address, 
-            aadhar, 
-            phone, 
-            email, 
-            dob, 
-            gender, 
-            password: hashedPassword
-        });
+        // Store password as plain text (NOT RECOMMENDED FOR PRODUCTION)
+        user = new User({ name, address, aadhar, phone, email, dob, gender, password });
 
         await user.save();
 
@@ -38,24 +28,44 @@ exports.registerUser = async (req, res) => {
 // Login User
 exports.loginUser = async (req, res) => {
     try {
-        console.log("heyy there");
         const { email, password } = req.body;
 
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({ message: "Invalid credentials" });
         }
-        console.log("heyy there2");
-        console.log("User password:", password);
-        
-        const match = await bcrypt.compare(req.body.password, user.password);
-        if (!match) return res.status(404).json({ message: "Username or password is incorrect!" });
-        console.log("heyy there3");
+
+        // Directly compare passwords (BAD PRACTICE FOR REAL APPS)
+        if (password !== user.password) {
+            return res.status(400).json({ message: "Username or password is incorrect!" });
+        }
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "30d" });
         res.json({ message: "Login successful", token });
     } catch (error) {
         console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+// Update User Profile
+exports.updateUserProfile = async (req, res) => {
+    try {
+        const { bloodGroup, medicalConditions, profileImage, address, aadhar, dob } = req.body;
+
+        const updatedUser = await User.findByIdAndUpdate(
+            req.user.id, // Get user ID from JWT token middleware
+            { bloodGroup, medicalConditions, profileImage, address, aadhar, dob },
+            { new: true } // Return the updated user
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.json({ message: "Profile updated successfully", user: updatedUser });
+    } catch (error) {
+        console.error("Error updating profile:", error);
         res.status(500).json({ message: "Server error" });
     }
 };

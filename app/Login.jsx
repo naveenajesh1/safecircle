@@ -1,11 +1,15 @@
 import { StyleSheet, TextInput, View, Text, TouchableOpacity, ScrollView, SafeAreaView, Alert } from 'react-native';
 import { useState } from 'react';
-import { login, register } from '@/services/authService'; // Import API functions
+import { useRouter } from 'expo-router'; // Import useRouter
+import { login, register } from '@/services/authService';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
 
-export default function LoginScreen({ navigation }) {
+
+export default function LoginScreen() {
+  const router = useRouter(); // Use useRouter for navigation
   const [isLogin, setIsLogin] = useState(true);
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
@@ -17,21 +21,30 @@ export default function LoginScreen({ navigation }) {
   const [password, setPassword] = useState('');
 
   // Function to handle Login & Signup
+ 
   const handleSubmit = async () => {
     try {
       if (isLogin) {
-        await login(email, password);
-        Alert.alert('Success', 'Logged in successfully!');
-        navigation.navigate('profile'); // Redirect to the profile page
+        const userData = await login(email, password);
+  
+        // ✅ Store token in AsyncStorage
+        await AsyncStorage.setItem("authToken", userData.token);
+        const storedToken = await AsyncStorage.getItem("authToken");
+        console.log("Stored Token:", storedToken); // ✅ Debugging token storage
+        
+  
+        Alert.alert("Success", "Logged in successfully!");
+        router.push("/"); // Navigate to profile page
       } else {
         await register({ name, address, aadhar, phone, email, dob, gender, password });
-        Alert.alert('Success', 'Account created successfully!');
-        setIsLogin(true); // Switch to login mode after successful registration
+        Alert.alert("Success", "Account created successfully!");
+        setIsLogin(true);
       }
     } catch (error) {
-      Alert.alert('Error', error);
+      Alert.alert("Error", error.message || "Something went wrong!");
     }
   };
+  
 
   return (
     <SafeAreaView style={styles.safeContainer}>

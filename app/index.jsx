@@ -2,9 +2,27 @@ import { View, Text, StyleSheet, ImageBackground, Pressable, TouchableOpacity } 
 import { Link, useRouter } from 'expo-router';
 import rctimage from '@/assets/images/a7395e40-2054-4147-8314-728e940a8063.jpg';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useState, useEffect } from 'react';
 
 const App = () => {
   const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Check if user is logged in
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      const token = await AsyncStorage.getItem('authToken');
+      setIsLoggedIn(!!token); // If token exists, user is logged in
+    };
+    checkLoginStatus();
+  }, []);
+
+  // Logout function
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('authToken'); // Remove the stored token
+    setIsLoggedIn(false); // Update state
+  };
 
   return (
     <View style={styles.container}>
@@ -31,8 +49,9 @@ const App = () => {
               <Text style={styles.buttonText}>Report</Text>
             </Pressable>
           </Link>
-           {/* Help & Guidelines Button */}
-           <Link href="/help" asChild>
+
+          {/* Help & Guidelines Button */}
+          <Link href="/help" asChild>
             <Pressable style={StyleSheet.flatten([styles.button, styles.helpButton])}>
               <Text style={styles.buttonText}>Guidelines</Text>
             </Pressable>
@@ -44,12 +63,19 @@ const App = () => {
               <Text style={styles.buttonText}>Settings</Text>
             </Pressable>
           </Link>
-          {/* Login Button */}
-          <Link href="/Login" asChild>
-            <Pressable style={StyleSheet.flatten([styles.button, styles.loginButton])}>
-              <Text style={styles.buttonText}>Log in</Text>
+
+          {/* Login/Logout Button */}
+          {isLoggedIn ? (
+            <Pressable style={StyleSheet.flatten([styles.button, styles.logoutButton])} onPress={handleLogout}>
+              <Text style={styles.buttonText}>Log out</Text>
             </Pressable>
-          </Link>
+          ) : (
+            <Link href="/Login" asChild>
+              <Pressable style={StyleSheet.flatten([styles.button, styles.loginButton])}>
+                <Text style={styles.buttonText}>Log in</Text>
+              </Pressable>
+            </Link>
+          )}
         </View>
       </ImageBackground>
     </View>
@@ -100,7 +126,6 @@ const styles = StyleSheet.create({
   titledes: {
     color: 'rgb(75, 87, 170)',
     fontSize: 18,
-    fontWeight: 'calibery',
     textAlign: 'center',
     textShadowColor: 'rgba(0, 0, 0, 0.7)',
     textShadowOffset: { width: 2, height: 2 },
@@ -129,6 +154,9 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     backgroundColor: 'dodgerblue',
+  },
+  logoutButton: {
+    backgroundColor: 'red',
   },
   reportButton: {
     backgroundColor: 'rgba(90, 12, 12, 0.7)',
