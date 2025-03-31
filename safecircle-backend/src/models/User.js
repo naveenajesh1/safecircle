@@ -9,17 +9,36 @@ const UserSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     dob: { type: String, required: true },
     gender: { type: String, required: true },
-    password: { type: String, required: true },
-    bloodGroup: { type: String }, // ✅ Added
-    medicalConditions: { type: String }, // ✅ Added
-    profileImage: { type: String }, // ✅ Added (Stores image URL) // Storing plain text password (NOT RECOMMENDED)
+    password: { type: String, required: true }, // Keeping plain text as per request
+    bloodGroup: { type: String },
+    medicalConditions: { type: String },
+    profileImage: { type: String },
+
+    // Emergency contacts per option
+    emergencyContacts: [
+      {
+        optionName: { type: String, required: true }, // e.g., "Fire", "Medical"
+        contacts: [{ type: String, required: true }] // List of phone numbers
+      }
+    ]
   },
   { timestamps: true }
 );
 
-// Compare passwords (Plain text comparison)
+// Function to update or add emergency contacts
+UserSchema.methods.updateEmergencyContact = function (optionName, newContacts) {
+  const index = this.emergencyContacts.findIndex((opt) => opt.optionName === optionName);
+  if (index !== -1) {
+    this.emergencyContacts[index].contacts = newContacts; // Update existing
+  } else {
+    this.emergencyContacts.push({ optionName, contacts: newContacts }); // Add new
+  }
+  return this.save();
+};
+
+// Direct password comparison (not recommended for security)
 UserSchema.methods.matchPassword = function (enteredPassword) {
-  return this.password === enteredPassword; // Simple string comparison
+  return this.password === enteredPassword;
 };
 
 const User = mongoose.model("User", UserSchema);

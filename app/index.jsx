@@ -34,7 +34,7 @@ const App = () => {
         </TouchableOpacity>
 
         {/* History Button */}
-        <TouchableOpacity style={styles.historyButton} onPress={() => router.push('/history')}>
+        <TouchableOpacity style={styles.historyButton} onPress={() => router.push('/History')}>
           <Ionicons name="time" size={50} color="white" />
         </TouchableOpacity>
         

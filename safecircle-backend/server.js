@@ -11,22 +11,22 @@ const connectDB = require("./src/config/db");
 connectDB();
 
 // Initialize Express App
-const app = express();
+const app = express(); // ✅ Moved this up
 
 // Middleware
 app.use(express.json()); // Body parser
 app.use(cors({ origin: "*" })); // Allow all origins (for development)
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
+// Import routes
 app.use("/api/auth", require("./src/routes/authRoutes"));
-//app.use("/api/user", require("./src/routes/userRoutes")); // ✅ Added userRoutes
+app.use("/api/emergency", require("./src/routes/emergencyContactRoutes")); // ✅ Added emergencyContactRoutes
 
 // Debug: Log registered routes
 console.log("Available routes:");
 app._router.stack.forEach((layer) => {
     if (layer.route) {
-        console.log(`✅ ${layer.route.path}`);s
+        console.log(`✅ ${layer.route.path}`);
     }
 });
 

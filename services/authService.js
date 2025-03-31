@@ -1,9 +1,10 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const API_URL = 'http://192.168.20.4:5000/api/auth';
+const BASE_API_URL = 'http://192.168.20.5:5000/api'; // Base API URL
+const API_URL = `${BASE_API_URL}/auth`; // Auth-specific
 
-
+export { BASE_API_URL, API_URL };
 
 // Login Function
 export const login = async (email, password) => {
@@ -49,11 +50,18 @@ export const logout = async () => {
 };
 
 // Get Auth Token Function
+
 export const getAuthToken = async () => {
   try {
-    return await AsyncStorage.getItem('authToken'); // Retrieve stored token
+    const token = await AsyncStorage.getItem('authToken');
+    if (!token) {
+      console.error('⚠️ No auth token found in storage!');
+      return null;
+    }
+    return token;
   } catch (error) {
     console.error('Error getting auth token:', error);
     return null;
   }
 };
+
