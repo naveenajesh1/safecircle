@@ -46,8 +46,7 @@ export default function RootLayout() {
           }}
         >
           <Stack.Screen name="index" options={{ headerShown: false, title: 'Home' }} />
-          <Stack.Screen name="Report tab" options={{ headerShown: true, title: 'Report', headerTitle: 'Report issue' }} />
-          <Stack.Screen name="contact" options={{ headerShown: true, title: 'Contact', headerTitle: 'Contact' }} />
+          
           <Stack.Screen name="Login" options={{ headerShown: false }} />
           <Stack.Screen name="profile" options={{ headerShown: true, title: 'Profile' }} /> 
           <Stack.Screen name="+not-found" options={{ headerShown: false }} />

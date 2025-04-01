@@ -1,60 +1,87 @@
-import { View, Text, StyleSheet, Switch } from 'react-native';
-import { useState } from 'react';
+import { View, Text, StyleSheet, Switch, ImageBackground } from 'react-native';
+import { useState, useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
 
 const Settings = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
+  const navigation = useNavigation();
 
+  useEffect(() => {
+    navigation.setOptions({ headerShown: false }); // Hide the header
+  }, [navigation]);
+
+  const styles = createStyles(darkMode); // Dynamically generate styles based on darkMode
+ 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Settings</Text>
+    <ImageBackground
+      source={require('@/assets/images/innerbg.jpg')} // Path to your background image
+      style={styles.backgroundImage}
+    >
+      {/* Overlay for dark mode */}
+      <View style={styles.overlay}>
+        <View style={styles.container}>
+          <Text style={styles.title}>Settings</Text>
 
-      {/* Notification Toggle */}
-      <View style={styles.settingRow}>
-        <Text style={styles.settingText}>Enable Notifications</Text>
-        <Switch 
-          value={notificationsEnabled} 
-          onValueChange={setNotificationsEnabled} 
-        />
-      </View>
+          {/* Notification Toggle */}
+          <View style={styles.settingRow}>
+            <Text style={styles.settingText}>Enable Notifications</Text>
+            <Switch
+              value={notificationsEnabled}
+              onValueChange={setNotificationsEnabled}
+            />
+          </View>
 
-      {/* Dark Mode Toggle */}
-      <View style={styles.settingRow}>
-        <Text style={styles.settingText}>Dark Mode</Text>
-        <Switch 
-          value={darkMode} 
-          onValueChange={setDarkMode} 
-        />
+          {/* Dark Mode Toggle */}
+          <View style={styles.settingRow}>
+            <Text style={styles.settingText}>Dark Mode</Text>
+            <Switch value={darkMode} onValueChange={setDarkMode} />
+          </View>
+        </View>
       </View>
-    </View>
+    </ImageBackground>
   );
 };
 
 export default Settings;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-    alignItems: 'center',
-    paddingTop: 50,
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  settingRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '80%',
-    padding: 15,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    elevation: 3,
-    marginBottom: 15,
-  },
-  settingText: {
-    fontSize: 18,
-  },
-});
+const createStyles = (darkMode) =>
+  StyleSheet.create({
+    backgroundImage: {
+      flex: 1,
+      resizeMode: 'cover', // Ensures the image covers the entire screen
+    },
+    overlay: {
+      flex: 1,
+      backgroundColor: darkMode ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.3)', // Adjust overlay based on darkMode
+    },
+    container: {
+      flex: 1,
+      justifyContent: 'center', // Center contents vertically
+      alignItems: 'center', // Center contents horizontally
+    },
+    title: {
+      fontSize: 30,
+      fontWeight: 'bold',
+      marginBottom: 20,
+      color: 'white', // Always white text color
+    },
+    settingRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      width: '80%',
+      padding: 15,
+      backgroundColor: darkMode
+        ? 'rgba(255, 255, 255, 0.2)'
+        : 'rgba(51, 12, 120, 0.8)', // Change row background based on darkMode
+      borderRadius: 10,
+      elevation: 3,
+      marginBottom: 15,
+    },
+    settingText: {
+      fontSize: 18,
+      color: 'white', // Always white text color
+    },
+  });
+
+

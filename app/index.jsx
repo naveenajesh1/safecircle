@@ -38,7 +38,7 @@ const App = () => {
           <Ionicons name="time" size={50} color="white" />
         </TouchableOpacity>
         
-        <Text style={styles.title}>SAFECIRCLE</Text>
+        <Text style={styles.title}>SAFE CIRCLE</Text>
         <Text style={styles.titledes}>Empowering Safety                                                   Strengthening Connections</Text>
 
         <View style={styles.buttonContainer}>
@@ -61,6 +61,13 @@ const App = () => {
           <Link href="/settings" asChild>
             <Pressable style={StyleSheet.flatten([styles.button, styles.settingsButton])}>
               <Text style={styles.buttonText}>Settings</Text>
+            </Pressable>
+          </Link>
+
+          {/* Services Button */}
+          <Link href="/services" asChild>
+            <Pressable style={StyleSheet.flatten([styles.button, styles.servicesButton])}>
+              <Text style={styles.buttonText}>Services</Text>
             </Pressable>
           </Link>
 
@@ -156,16 +163,19 @@ const styles = StyleSheet.create({
     backgroundColor: 'dodgerblue',
   },
   logoutButton: {
-    backgroundColor: 'red',
+    backgroundColor: 'rgb(99, 56, 173)',
   },
   reportButton: {
-    backgroundColor: 'rgba(90, 12, 12, 0.7)',
+    backgroundColor: 'red',
   },
   helpButton: {
     backgroundColor: 'darkblue',
   },
   settingsButton: {
     backgroundColor: 'blue',
+  },
+  servicesButton: {
+    backgroundColor: 'rgb(7, 53, 151)', // Add a distinct color for the Services button
   },
   buttonText: {
     color: 'white',

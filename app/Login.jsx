@@ -1,15 +1,17 @@
 import { StyleSheet, TextInput, View, Text, TouchableOpacity, ScrollView, SafeAreaView, Alert } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router'; // Import useRouter
 import { login, register } from '@/services/authService';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
-
+import { useNavigation } from "@react-navigation/native"; // Import useNavigation
 
 export default function LoginScreen() {
   const router = useRouter(); // Use useRouter for navigation
+  const navigation = useNavigation(); // Use useNavigation to access navigation options
+
   const [isLogin, setIsLogin] = useState(true);
   const [name, setName] = useState('');
   const [address, setAddress] = useState('');
@@ -20,19 +22,90 @@ export default function LoginScreen() {
   const [gender, setGender] = useState('');
   const [password, setPassword] = useState('');
 
+  // Hide the header
+  useEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
+
+  // Email validation function
+  const validateEmail = (email) => {
+    const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  // Phone number validation function
+  const validatePhone = (phone) => {
+    const re = /^[0-9]{10}$/;
+    return re.test(String(phone));
+  };
+
+  // Password validation function
+  const validatePassword = (password) => {
+    // Minimum 6 characters required for the password
+    return password.length >= 6;
+  };
+
+  // Aadhar number validation function (12 digits)
+  const validateAadhar = (aadhar) => {
+    const re = /^[0-9]{12}$/;
+    return re.test(String(aadhar));
+  };
+
+  // Date of Birth validation function (DD/MM/YYYY format)
+  const validateDOB = (dob) => {
+    const re = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/(19|20)\d\d$/;
+    const isValidFormat = re.test(dob);
+    if (isValidFormat) {
+      const [day, month, year] = dob.split('/');
+      const date = new Date(year, month - 1, day);
+      const today = new Date();
+      return date < today;
+    }
+    return false;
+  };
+
   // Function to handle Login & Signup
- 
   const handleSubmit = async () => {
+    // Validate fields
+    if (!isLogin) {
+      if (!name || !address || !aadhar || !dob || !gender) {
+        Alert.alert("Invalid Input", "Please fill all the required fields.");
+        return;
+      }
+      if (!validateAadhar(aadhar)) {
+        Alert.alert("Invalid Aadhar", "Please enter a valid 12-digit Aadhar number.");
+        return;
+      }
+      if (!validateDOB(dob)) {
+        Alert.alert("Invalid DOB", "Please enter a valid Date of Birth in DD/MM/YYYY format and ensure the date is in the past.");
+        return;
+      }
+    }
+
+    if (!phone || !validatePhone(phone)) {
+      Alert.alert("Invalid Phone", "Please enter a valid 10-digit phone number.");
+      return;
+    }
+
+    if (!email || !validateEmail(email)) {
+      Alert.alert("Invalid Email", "Please enter a valid email address.");
+      return;
+    }
+
+    if (!password || !validatePassword(password)) {
+      Alert.alert("Invalid Password", "Password should be at least 6 characters long.");
+      return;
+    }
+
     try {
       if (isLogin) {
         const userData = await login(email, password);
-  
+
         // ✅ Store token in AsyncStorage
         await AsyncStorage.setItem("authToken", userData.token);
         const storedToken = await AsyncStorage.getItem("authToken");
         console.log("Stored Token:", storedToken); // ✅ Debugging token storage
-        
-  
+
         Alert.alert("Success", "Logged in successfully!");
         router.push("/"); // Navigate to profile page
       } else {
@@ -44,15 +117,14 @@ export default function LoginScreen() {
       Alert.alert("Error", error.message || "Something went wrong!");
     }
   };
-  
 
   return (
     <SafeAreaView style={styles.safeContainer}>
       <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
         <View style={styles.container}>
-          <IconSymbol size={100} color="#4A90E2" name="chevron.left.forwardslash.chevron.right" style={styles.headerImage} />
+
           <ThemedView style={styles.titleContainer}>
-            <ThemedText type="title">{isLogin ? 'Login' : 'Create Account'}</ThemedText>
+            <ThemedText style={styles.titleText}type="title">{isLogin ? ' LOGIN ' : 'Create Account'}</ThemedText>
           </ThemedView>
 
           <View style={styles.inputContainer}>
@@ -102,13 +174,13 @@ const InputField = ({ label, value, onChangeText, keyboardType = 'default', secu
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: 'lightblue',
   },
   scrollContainer: {
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 20,
+    paddingBottom:220,
   },
   container: {
     width: '90%',
@@ -155,9 +227,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  titleText: {
+    color: '#FFF',
+    paddingTop:10,
+    fontSize: 40,
+    fontWeight: 'bold',
+  },
   switchText: {
     color: '#4A90E2',
     marginTop: 10,
   },
 });
-

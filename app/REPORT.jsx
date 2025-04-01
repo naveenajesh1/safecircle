@@ -266,11 +266,9 @@ function createStyles(theme) {
     },
     row: {
       flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      left: 35,
-      width: 300,
-      maxWidth: 600,
+      justifyContent: "space-between", // Ensures even spacing between children
+      alignItems: "center", // Vertically centers the content
+      width: "90%", // Use percentage-based width for consistency
       height: 55,
       marginBottom: 12,
       borderRadius: 18,
@@ -279,7 +277,9 @@ function createStyles(theme) {
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.2,
       shadowRadius: 4,
-      elevation: 1,
+      elevation: 1, // Adds shadow for Android
+      alignSelf: "center", // Centers the row horizontally
+      paddingHorizontal: 10, // Adds padding inside the row
     },
     emergencyButton: {
       flex: 1,

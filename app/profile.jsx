@@ -38,7 +38,7 @@ export default function Profile() {
         throw new Error("No token found. Please log in again.");
       }
 
-      const response = await fetch("http://192.168.20.5:5000/api/auth/profile", {
+      const response = await fetch("http://192.168.233.105:5000/api/auth/profile", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -79,7 +79,7 @@ export default function Profile() {
         return;
       }
 
-      const response = await fetch("http://192.168.20.5:5000/api/auth/profile", {
+      const response = await fetch("http://192.168.233.105:5000/api/auth/profile", {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,

@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Import routes
 app.use("/api/auth", require("./src/routes/authRoutes"));
-app.use("/api/emergency", require("./src/routes/emergencyContactRoutes")); // ✅ Added emergencyContactRoutes
+// app.use("/api/emergency", require("./src/routes/emergencyContactRoutes")); // ✅ Added emergencyContactRoutes
 
 // Debug: Log registered routes
 console.log("Available routes:");
