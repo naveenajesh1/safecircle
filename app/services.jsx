@@ -151,17 +151,18 @@ export default function ServicesScreen() {
   );
 
   return (
-   
-      <ImageBackground source={require('@/assets/images/innerbg.jpg')} style={styles.background}>
-         <SafeAreaView style={styles.safeArea}>
+    <ImageBackground
+      source={require('@/assets/images/a7395e40-2054-4147-8314-728e940a8063.jpg')} // Use alias or relative path
+      style={styles.backgroundImage}
+    >
+      <SafeAreaView style={styles.safeArea}>
         <View style={{ flex: 1 }}>
           {currentScreen === "states" && renderStatesScreen()}
           {currentScreen === "districts" && renderDistrictsScreen()}
           {currentScreen === "services" && renderServicesScreen()}
         </View>
-        </SafeAreaView>
-      </ImageBackground>
-    
+      </SafeAreaView>
+    </ImageBackground>
   );
 }
 
@@ -169,10 +170,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: "#000", // Optional: Set a fallback background color
-  },
-  background: {
-    flex: 1,
-    resizeMode: "cover",
   },
   container: {
     alignItems: "center",
@@ -185,6 +182,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: "80%",
     alignItems: "center",
+  },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: "cover", // Ensures the image covers the entire screen
   },
   backButton: {
     backgroundColor: "#f44336",

@@ -1,71 +1,56 @@
 const Contact = require("../models/Contact");
 const User = require("../models/User");
 
-// Add a trusted contact
-const addContact = async (req, res) => {
-    try {
-        const { name, phone } = req.body;
-        const userId = req.user.id;
-
-        const contact = new Contact({ user: userId, name, phone });
-        await contact.save();
-
-        await User.findByIdAndUpdate(userId, { $push: { trustedContacts: contact._id } });
-
-        res.status(201).json({ message: "Contact added successfully", contact });
-    } catch (error) {
-        res.status(500).json({ error: "Error adding contact" });
-    }
-};
-
 // Get all trusted contacts
-const getContacts = async (req, res) => {
+
+// Update a report option
+const updateReportOption = async (req, res) => {
     try {
+        const { name, contacts, procedure } = req.body;
         const userId = req.user.id;
-        const contacts = await Contact.find({ user: userId });
-        res.status(200).json(contacts);
-    } catch (error) {
-        res.status(500).json({ error: "Error fetching contacts" });
-    }
-};
 
-// Update a contact
-const updateContact = async (req, res) => {
-    try {
-        const contactId = req.params.id;
-        const { name, phone } = req.body;
-
-        const updatedContact = await Contact.findByIdAndUpdate(contactId, { name, phone }, { new: true });
-
-        if (!updatedContact) {
-            return res.status(404).json({ error: "Contact not found" });
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
         }
 
-        res.status(200).json(updatedContact);
+        const optionIndex = user.reportOptions.findIndex((option) => option.name === name);
+        if (optionIndex !== -1) {
+            // Update existing option
+            user.reportOptions[optionIndex].contacts = contacts;
+            user.reportOptions[optionIndex].procedure = procedure;
+        } else {
+            // Add new option
+            user.reportOptions.push({ name, contacts, procedure });
+        }
+
+        await user.save();
+        res.status(200).json({ message: "Report option updated successfully", reportOptions: user.reportOptions });
     } catch (error) {
-        res.status(500).json({ error: "Error updating contact" });
+        console.error("Error updating report option:", error);
+        res.status(500).json({ message: "Server error" });
     }
 };
 
-// Delete a contact
-const deleteContact = async (req, res) => {
+// Get all report options
+const getReportOptions = async (req, res) => {
     try {
-        const contactId = req.params.id;
         const userId = req.user.id;
 
-        await Contact.findByIdAndDelete(contactId);
-        await User.findByIdAndUpdate(userId, { $pull: { trustedContacts: contactId } });
+        const user = await User.findById(userId).select("reportOptions");
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
 
-        res.status(200).json({ message: "Contact deleted successfully" });
+        res.status(200).json(user.reportOptions);
     } catch (error) {
-        res.status(500).json({ error: "Error deleting contact" });
+        console.error("Error fetching report options:", error);
+        res.status(500).json({ message: "Server error" });
     }
 };
 
 // ✅ Ensure all functions are properly exported
 module.exports = {
-    addContact,
-    getContacts,
-    updateContact,
-    deleteContact
+    updateReportOption,
+    getReportOptions
 };

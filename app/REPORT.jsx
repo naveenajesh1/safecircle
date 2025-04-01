@@ -23,12 +23,14 @@ import { FontAwesome } from "@expo/vector-icons";
 import rctimage from "@/assets/images/a7395e40-2054-4147-8314-728e940a8063.jpg";
 import { useNavigation } from "@react-navigation/native"; // Import useNavigation
 
+const BASE_API_URL = "http://192.168.20.4:5000/api"; // Define base API URL
+
 const defaultOptions = [
-  { name: "Threat", contacts: ["+917909107741"], procedure: "I am under attack by someone. Please send help!" },
-  { name: "Accident", contacts: ["+919495885244"], procedure: "I had an accident. I need help." },
-  { name: "Medical Emergency", contacts: ["+917306804904"], procedure: "Seek medical help immediately." },
-  { name: "Fire", contacts: ["+917994942544"], procedure: "I am surrounded by fire. Please help!" },
-  { name: "Natural Disaster", contacts: [], procedure: "Find shelter immediately." },
+  { name: "Threat", contacts: [], procedure: "" },
+  { name: "Accident", contacts: [], procedure: "" },
+  { name: "Medical Emergency", contacts: [], procedure: "" },
+  { name: "Fire", contacts: [], procedure: "" },
+  { name: "Natural Disaster", contacts: [], procedure: "" },
 ];
 
 export default function EmergencyOptions() {
@@ -54,6 +56,44 @@ export default function EmergencyOptions() {
       duration: 500,
       useNativeDriver: true,
     }).start();
+  }, []);
+
+  useEffect(() => {
+    const fetchEmergencyOptions = async () => {
+      try {
+        const token = await AsyncStorage.getItem("authToken");
+        const response = await fetch(`${BASE_API_URL}/contact/report-options`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch emergency options");
+        }
+
+        const data = await response.json();
+        console.log("Fetched Emergency Options:", data);
+
+        // If the backend returns an empty array, use the default options
+        if (data.length === 0) {
+          setOptions(defaultOptions);
+        } else {
+          setOptions(data);
+        }
+      } catch (error) {
+        console.error("Error fetching emergency options:", error);
+        Toast.show({
+          type: "error",
+          text1: "Error",
+          text2: "Failed to fetch emergency options.",
+          position: "center",
+        });
+      }
+    };
+
+    fetchEmergencyOptions();
   }, []);
 
   const handleSendAlert = async (option) => {
@@ -148,12 +188,42 @@ export default function EmergencyOptions() {
     setIsEditing(true);
   };
 
-  const handleSaveOption = (updatedOption) => {
-    setOptions((prevOptions) =>
-      prevOptions.map((option) => (option.name === updatedOption.name ? updatedOption : option))
-    );
-    setSelectedOption(null);
-    setIsEditing(false);
+  const handleSaveOption = async (updatedOption) => {
+    try {
+      const token = await AsyncStorage.getItem("authToken");
+      const response = await fetch(`${BASE_API_URL}/contact/report-options`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedOption),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update emergency option");
+      }
+
+      const data = await response.json();
+
+      // Update the options state with the updated data
+      setOptions((prevOptions) =>
+        prevOptions.map((option) =>
+          option.name === updatedOption.name ? updatedOption : option
+        )
+      );
+
+      setSelectedOption(null); // Close the edit modal
+      setIsEditing(false); // Reset editing state
+    } catch (error) {
+      console.error("Error updating emergency option:", error);
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: "Failed to update emergency option.",
+        position: "center",
+      });
+    }
   };
 
   return (
@@ -192,17 +262,22 @@ export default function EmergencyOptions() {
                   style={styles.editButton}
                   onPress={() => handleEditOption(item)}
                 >
-                  <FontAwesome name="pencil" size={18} color={theme.text} />
+                  <FontAwesome name="pencil" size={18} color="white" />
                 </TouchableOpacity>
               </View>
             )}
+            ListEmptyComponent={
+              <Text style={{ color: "white", textAlign: "center", marginTop: 20 }}>
+                No emergency options available.
+              </Text>
+            }
           />
         </Animated.View>
 
         {isEditing && selectedOption && (
           <EditEmergencyOption
             option={selectedOption}
-            onSave={handleSaveOption}
+            onSave={handleSaveOption} // Pass the handleSaveOption function
             onDismiss={() => setIsEditing(false)}
           />
         )}

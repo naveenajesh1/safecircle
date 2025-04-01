@@ -8,18 +8,37 @@ import {
   StyleSheet,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
+import Toast from "react-native-toast-message";
 
 export default function EditEmergencyOption({ option, onSave, onDismiss }) {
-  const [contacts, setContacts] = useState(option.contacts.join(", "));
+  // Remove +91 prefix for display
+  const [contacts, setContacts] = useState(
+    option.contacts.map((c) => c.replace("+91", "")).join(", ")
+  );
   const [procedure, setProcedure] = useState(option.procedure);
 
   const handleSave = () => {
     const updatedOption = {
       ...option,
-      contacts: contacts.split(",").map((c) => c.trim()), // Convert to array
+      contacts: contacts
+        .split(",")
+        .map((c) => c.trim()) // Trim whitespace
+        .filter((c) => /^[0-9]{10}$/.test(c)) // Validate 10-digit numbers
+        .map((c) => `+91${c}`), // Prepend +91 to each number
       procedure,
     };
-    onSave(updatedOption);
+
+    if (updatedOption.contacts.length === 0) {
+      Toast.show({
+        type: "error",
+        text1: "Invalid Contacts",
+        text2: "Please enter valid 10-digit phone numbers.",
+        position: "center",
+      });
+      return;
+    }
+
+    onSave(updatedOption); // Pass the updated option back to the parent
   };
 
   return (
