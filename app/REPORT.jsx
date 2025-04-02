@@ -22,8 +22,9 @@ import EditEmergencyOption from "./edit-emergency-option";
 import { FontAwesome } from "@expo/vector-icons";
 import rctimage from "@/assets/images/a7395e40-2054-4147-8314-728e940a8063.jpg";
 import { useNavigation } from "@react-navigation/native"; // Import useNavigation
+import { BASE_API_URL } from "@/services/authService"; // Import BASE_API_URL
 
-const BASE_API_URL = "http://192.168.20.4:5000/api"; // Define base API URL
+
 
 const defaultOptions = [
   { name: "Threat", contacts: [], procedure: "" },

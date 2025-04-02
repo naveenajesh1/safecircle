@@ -46,35 +46,36 @@ const App = () => {
           {/* Report Button */}
           <Link href="/REPORT" asChild>
             <Pressable style={StyleSheet.flatten([styles.button, styles.reportButton])}>
-              <Text style={styles.buttonText}>Report</Text>
+              <Text style={styles.buttonText}>REPORT</Text>
             </Pressable>
           </Link>
+
+           {/* Services Button */}
+           <Link href="/services" asChild>
+            <Pressable style={StyleSheet.flatten([styles.button, styles.servicesButton])}>
+              <Text style={styles.buttonText}>SERVICES</Text>
+            </Pressable>
+          </Link>
+
 
           {/* Help & Guidelines Button */}
           <Link href="/help" asChild>
             <Pressable style={StyleSheet.flatten([styles.button, styles.helpButton])}>
-              <Text style={styles.buttonText}>Guidelines</Text>
+              <Text style={styles.buttonText}>GUIDELINES</Text>
             </Pressable>
           </Link>
 
           {/* Settings Button */}
           <Link href="/settings" asChild>
             <Pressable style={StyleSheet.flatten([styles.button, styles.settingsButton])}>
-              <Text style={styles.buttonText}>Settings</Text>
-            </Pressable>
-          </Link>
-
-          {/* Services Button */}
-          <Link href="/services" asChild>
-            <Pressable style={StyleSheet.flatten([styles.button, styles.servicesButton])}>
-              <Text style={styles.buttonText}>Services</Text>
+              <Text style={styles.buttonText}>SETTINGS</Text>
             </Pressable>
           </Link>
 
           {/* Login/Logout Button */}
           {isLoggedIn ? (
             <Pressable style={StyleSheet.flatten([styles.button, styles.logoutButton])} onPress={handleLogout}>
-              <Text style={styles.buttonText}>Log out</Text>
+              <Text style={styles.buttonText}>LOG OUT</Text>
             </Pressable>
           ) : (
             <Link href="/Login" asChild>
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 45,
     fontWeight: 'bold',
-    fontFamily: 'Palatino' ,
+    fontFamily: 'sans-serif' ,
     textAlign: 'center',
     textShadowColor: 'rgba(0, 0, 0, 0.7)',
     textShadowOffset: { width: 2, height: 2 },
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(7, 53, 151)', // Add a distinct color for the Services button
   },
   buttonText: {
-    color: 'white',
+    color: 'rgb(255, 255, 255)',
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'center',

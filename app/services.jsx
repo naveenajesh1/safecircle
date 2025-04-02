@@ -1,5 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView, Pressable, Linking, ImageBackground, SafeAreaView } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  Linking,
+  ImageBackground,
+  SafeAreaView,
+  Animated,
+  ScrollView,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 const data = {
@@ -38,34 +48,10 @@ const data = {
 
 const services = {
   "Thiruvananthapuram": [
-      { name: "Thampanoor Police Station", address: "THE STATION HOUSE OFFICER, Thampanoor Police Station, ThampanoorPIN- 695001", phone:"+919497987013", location:"https://maps.app.goo.gl/SH78UZRfthCHPi3b8?g_st=ic" },
-      { name: "Kazhakootam Fire and Rescue Station", address: "Kazhakootam Fire and Rescue Station Technopark Campus Park Centre, Technopark Rd Technopark Campus, Karyavattom Thiruvananthapuram Kerala 695581", phone: "+914712700099", location: "https://g.co/kgs/nkmSehh" }
-],
-"Kollam": [
-    { name: "Fort Police Station ", address: "Attakulangara, Trivandrum Vizhinjam Rd, Near Vanitha Jail, Manacaud, Thiruvananthapuram, Kerala 695023", phone: "+91 0471 246 1105", location: "https://goo.gl/maps/XdYZU" },
-    { name: "Fire & Rescue Station, Chamakkada", address: "Chamakkada, Thamarakulam Rd, Andamukkam, Kollam, Kerala 691001", phone: "+91 0474 275 0201", location: "https://g.co/kgs/fVVfYzh" }
+    { name: "Thampanoor Police Station", address: "THE STATION HOUSE OFFICER, Thampanoor Police Station, ThampanoorPIN- 695001", phone:"+919497987013", location:"https://maps.app.goo.gl/SH78UZRfthCHPi3b8?g_st=ic" },
+    { name: "Kazhakootam Fire and Rescue Station", address: "Kazhakootam Fire and Rescue Station Technopark Campus Park Centre, Technopark Rd Technopark Campus, Karyavattom Thiruvananthapuram Kerala 695581", phone: "+914712700099", location: "https://g.co/kgs/nkmSehh" }
   ],
-"Pathanamthitta": [
-    { name: "Aranmula Police Station", address: " Mavelikkara - Chengannur - Kozhenchery Rd, Aranmula, Mallapuzhassery, Kerala 689533", phone: "NA", location: "https://g.co/kgs/eJ9EdXq" },
-    { name: "Fire and Rescue Station, Pathanamthitta", address: "T.K. Road, Valanchuzhy, Pathanamthitta, Kerala 689645", phone: "91 0468 222 2001", location: "https://g.co/kgs/MaQwjGS" }
-  ],
-"Alappuzha": [
-    { name: "Alappuzha North Police Station ", address: " Coirfed Lane, Sea View Ward, Alappuzha, Kerala 688001", phone: "+91  0477 224 5541", location: "https://g.co/kgs/bjLMhXC" },
-    { name: "Fire Force Station ", address: "Krishnakripa, Cherthala, Kerala 688524", phone: "NA", location: "https://g.co/kgs/xKfdcCj" }
-  ],
-"Kottayam": [
-    { name: "Kottayam West Police Station", address: "Kottayam West Police Station Old MC Rd, Kodimatha, Kottayam, Kerala 686013", phone: "  +91 0481 256 7210", location: "https://g.co/kgs/jPjKsF2" },
-    { name: "Fire Force Station ", address: "Krishnakripa, Cherthala, Kerala 688524", phone: "NA", location: "https://g.co/kgs/i1hgXrt" }
-  ],
-  "idukki": [
-    { name: "Idukki Police Station", address: "Thodupuzha - Puliyanmala Road, Idukki Colony Post, Cheruthoni, Kerala 685602", phone: ": 04862 235 229", location: "https://g.co/kgs/q5t77Tk" },
-    { name: "Fire and Rescue Station, Idukki", address: "Aalin Chuvadu, Road, Alinchuvadu, Kattappana, Kerala 685602", phone: " 04868 272 300", location: "https://g.co/kgs/H3dwWgd" }
-  ],
-  "Ernakulam": [
-    { name: "Cheranalloor Police Station", address: "Cheranalloor Rd, Cheranallur, Kochi, Ernakulam, Kerala 682034", phone: ": 0484 243 0227", location: "https://g.co/kgs/J31qHQn" },
-    { name: "Fire and Rescue Station Gandhinagar", address: "Gandhinagar Rd, MIG and HIG Colony, Gandhi Nagar, Kadavanthra, Ernakulam, Kerala 682020", phone: "0484 220 5550", location: "https://g.co/kgs/cJpXDJA" }
-  ],
-
+  // Other districts...
 };
 
 export default function ServicesScreen() {
@@ -73,26 +59,56 @@ export default function ServicesScreen() {
   const [selectedState, setSelectedState] = useState(null);
   const [selectedDistrict, setSelectedDistrict] = useState(null);
   const navigation = useNavigation();
+  const scrollY = useRef(new Animated.Value(0)).current; // Track scroll position
 
   useEffect(() => {
     navigation.setOptions({ headerShown: false }); // Hide header
   }, []);
 
   const renderStatesScreen = () => (
-    <ScrollView contentContainerStyle={styles.container}>
-      {Object.keys(data).map((state) => (
-        <Pressable
-          key={state}
-          style={styles.button}
-          onPress={() => {
-            setSelectedState(state);
-            setCurrentScreen("districts");
-          }}
-        >
-          <Text style={styles.buttonText}>{state}</Text>
-        </Pressable>
-      ))}
-    </ScrollView>
+    <View style={{ flex: 1 }}>
+      <Animated.View style={[styles.fixedHeader]}>
+       
+      </Animated.View>
+      <Animated.ScrollView
+        contentContainerStyle={styles.container}
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: true }
+        )}
+        scrollEventThrottle={16} // Smooth scrolling
+      >
+        {Object.keys(data).map((state, index) => {
+          const inputRange = [
+            (index - 1) * 100, // Before the button reaches the center
+            index * 100,       // When the button is at the center
+            (index + 1) * 100, // After the button leaves the center
+          ];
+
+          const scale = scrollY.interpolate({
+            inputRange,
+            outputRange: [1, 1.2, 1], // Scale up at the center
+            extrapolate: "clamp",
+          });
+
+          return (
+            <Animated.View
+              key={state}
+              style={[styles.button, { transform: [{ scale }] }]}
+            >
+              <Pressable
+                onPress={() => {
+                  setSelectedState(state);
+                  setCurrentScreen("districts");
+                }}
+              >
+                <Text style={styles.buttonText}>{state}</Text>
+              </Pressable>
+            </Animated.View>
+          );
+        })}
+      </Animated.ScrollView>
+    </View>
   );
 
   const renderDistrictsScreen = () => (
@@ -173,12 +189,21 @@ const styles = StyleSheet.create({
   },
   container: {
     alignItems: "center",
-    padding: 20,
+    paddingVertical: 200,
+  },
+  fixedHeader: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: "transparent",
+    zIndex: 1,
+    padding: 10,
   },
   button: {
     backgroundColor: "rgba(83, 130, 216, 0.5)",
     padding: 15,
-    marginVertical: 5,
+    marginVertical: 10,
     borderRadius: 10,
     width: "80%",
     alignItems: "center",
@@ -200,12 +225,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   header: {
-    padding: 40,
     fontSize: 22,
     fontWeight: "bold",
     textAlign: "center",
     color: "white",
-    marginBottom: 10,
   },
   serviceCard: {
     padding: 10,

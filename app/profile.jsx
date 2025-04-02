@@ -6,12 +6,14 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  ScrollView,
   ActivityIndicator,
   ImageBackground,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import { BASE_API_URL } from "@/services/authService"; // Import BASE_API_URL
 
 export default function Profile() {
   const [profileImage, setProfileImage] = useState(null);
@@ -37,8 +39,7 @@ export default function Profile() {
       if (!token) {
         throw new Error("No token found. Please log in again.");
       }
-
-      const response = await fetch("http://192.168.20.4:5000/api/auth/profile", {
+      const response = await fetch(`${BASE_API_URL}/auth/profile`, { // Use
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -79,7 +80,7 @@ export default function Profile() {
         return;
       }
 
-      const response = await fetch("http://192.168.20.4:5000/api/auth/profile", {
+      const response = await fetch(`${BASE_API_URL}/auth/profile`, { // Use
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -126,6 +127,7 @@ export default function Profile() {
       source={require('@/assets/images/bg.jpg')} // Path to your new background image
       style={styles.backgroundImage}
     >
+      <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
       {/* Dark overlay */}
       <View style={styles.overlay}>
         <View style={styles.container}>
@@ -176,6 +178,7 @@ export default function Profile() {
           </TouchableOpacity>
         </View>
       </View>
+      </ScrollView>
     </ImageBackground>
   );
 }
@@ -203,11 +206,12 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent black overlay
+    height: "120%",
+    backgroundColor: "rgba(16, 18, 20, 0.5)", // Semi-transparent black overlay
   },
   container: {
     flex: 1,
-    padding: 20,
+    padding: 1,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -215,7 +219,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 20,
   }, 
-  
+  scrollContainer: {
+    flexGrow: 3,
+  },
   profileImage: {
     width: 150, // Profile picture width
     height: 150, // Profile picture height
@@ -283,7 +289,7 @@ const styles = StyleSheet.create({
   loaderContainer: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "left",
   },
 });
 

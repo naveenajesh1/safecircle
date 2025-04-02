@@ -124,7 +124,7 @@ export default function LoginScreen() {
         <View style={styles.container}>
 
           <ThemedView style={styles.titleContainer}>
-            <ThemedText style={styles.titleText}type="title">{isLogin ? ' LOGIN ' : 'Create Account'}</ThemedText>
+            <ThemedText style={styles.titleText}type="title">{isLogin ? '  LOGIN ' : 'NEW ACCOUNT'}</ThemedText>
           </ThemedView>
 
           <View style={styles.inputContainer}>
@@ -186,9 +186,7 @@ const styles = StyleSheet.create({
     width: '90%',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  headerImage: {
-    marginBottom: 20,
+    paddingBottom: 40,
   },
   titleContainer: {
     marginBottom: 20,
@@ -198,7 +196,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   inputWrapper: {
-    marginBottom: 15,
+    marginBottom: 10,
   },
   label: {
     fontSize: 14,
@@ -228,10 +226,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   titleText: {
-    color: '#FFF',
-    paddingTop:10,
-    fontSize: 40,
-    fontWeight: 'bold',
+    color: 'black',
+    fontSize: 35,
+    paddingTop: 15,
+    fontWeight: '700',
+    fontFamily:'sans-serif',
+
   },
   switchText: {
     color: '#4A90E2',
