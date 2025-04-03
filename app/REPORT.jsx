@@ -236,8 +236,7 @@ function createStyles(theme) {
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
-      left:35,
-      width:300,
+      width: "100%", // Use percentage-based width for consistency
       maxWidth: 600,
       height: 55,
       marginBottom: 12,
@@ -248,6 +247,8 @@ function createStyles(theme) {
       shadowOpacity: 0.2,
       shadowRadius: 4,
       elevation: 1,
+      alignSelf: "center", // Center the row horizontally
+      paddingHorizontal: 10, // Add padding for better spacing
     },
     emergencyButton: {
       flex: 1,

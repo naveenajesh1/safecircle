@@ -38,7 +38,7 @@ const App = () => {
           <Ionicons name="time" size={50} color="white" />
         </TouchableOpacity>
         
-        <Text style={styles.title}>SAFECIRCLE</Text>
+        <Text style={styles.title}>SAFE CIRCLE</Text>
         <Text style={styles.titledes}>Empowering Safety                                                   Strengthening Connections</Text>
 
         <View style={styles.buttonContainer}>
@@ -156,10 +156,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'dodgerblue',
   },
   logoutButton: {
-    backgroundColor: 'red',
+    backgroundColor: 'rgba(94, 52, 162, 0.93)',
   },
   reportButton: {
-    backgroundColor: 'rgba(90, 12, 12, 0.7)',
+    backgroundColor: 'rgba(243, 16, 16, 0.93)',
   },
   helpButton: {
     backgroundColor: 'darkblue',
