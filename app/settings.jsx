@@ -1,5 +1,9 @@
 import { View, Text, StyleSheet, Switch, ImageBackground } from 'react-native';
+<<<<<<< HEAD
 import { useState, useLayoutEffect } from 'react';
+=======
+import { useState, useEffect } from 'react';
+>>>>>>> ee96e9b901de969e0be4140b0b6c165394540444
 import { useNavigation } from '@react-navigation/native';
 
 const Settings = () => {
@@ -7,7 +11,11 @@ const Settings = () => {
   const [darkMode, setDarkMode] = useState(false);
   const navigation = useNavigation();
 
+<<<<<<< HEAD
   useLayoutEffect(() => {
+=======
+  useEffect(() => {
+>>>>>>> ee96e9b901de969e0be4140b0b6c165394540444
     navigation.setOptions({ headerShown: false }); // Hide the header
   }, [navigation]);
 
@@ -83,3 +91,8 @@ const createStyles = (darkMode) =>
       color: 'white', // Always white text color
     },
   });
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> ee96e9b901de969e0be4140b0b6c165394540444

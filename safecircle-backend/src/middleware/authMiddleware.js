@@ -4,7 +4,6 @@ const User = require("../models/User");
 const authMiddleware = async (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
-        
         console.log("🔍 Auth Header:", authHeader); // Debugging log
 
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -19,7 +18,6 @@ const authMiddleware = async (req, res, next) => {
         console.log("✅ Decoded Token:", decoded); // Debugging log
 
         req.user = await User.findById(decoded.id).select("-password");
-        
         if (!req.user) {
             console.log("⛔ User not found in database");
             return res.status(404).json({ message: "User not found" });
@@ -33,4 +31,4 @@ const authMiddleware = async (req, res, next) => {
     }
 };
 
-module.exports = { authMiddleware };
+module.exports = { authMiddleware }; // ✅ Ensure export matches import

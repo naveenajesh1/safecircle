@@ -16,30 +16,36 @@ export const useAuth = () => {
 // Provider Component
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null); // ✅ Store token separately
 
   useEffect(() => {
-    // Load user from storage on app start
-    const loadUser = async () => {
+    // Load user & token from storage on app start
+    const loadAuthData = async () => {
       const storedUser = await AsyncStorage.getItem("user");
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-      }
+      const storedToken = await AsyncStorage.getItem("authToken"); // ✅ Load token
+
+      if (storedUser) setUser(JSON.parse(storedUser));
+      if (storedToken) setToken(storedToken);
     };
-    loadUser();
+    loadAuthData();
   }, []);
 
-  const login = async (userData) => {
+  const login = async (userData, authToken) => {
     setUser(userData);
-    await AsyncStorage.setItem("user", JSON.stringify(userData)); // Store user data
+    setToken(authToken); // ✅ Store token
+    await AsyncStorage.setItem("user", JSON.stringify(userData));
+    await AsyncStorage.setItem("authToken", authToken); // ✅ Save token in AsyncStorage
   };
 
   const logout = async () => {
     setUser(null);
-    await AsyncStorage.removeItem("user"); // Remove user data
+    setToken(null);
+    await AsyncStorage.removeItem("user");
+    await AsyncStorage.removeItem("authToken"); // ✅ Remove token
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, token, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

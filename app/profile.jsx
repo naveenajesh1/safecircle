@@ -6,12 +6,17 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  ScrollView,
   ActivityIndicator,
   ImageBackground,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+<<<<<<< HEAD
+=======
+import { BASE_API_URL } from "@/services/authService"; // Import BASE_API_URL
+>>>>>>> ee96e9b901de969e0be4140b0b6c165394540444
 
 export default function Profile() {
   const [profileImage, setProfileImage] = useState(null);
@@ -37,8 +42,12 @@ export default function Profile() {
       if (!token) {
         throw new Error("No token found. Please log in again.");
       }
+<<<<<<< HEAD
 
       const response = await fetch("http://192.168.233.196:5000/api/auth/profile", {
+=======
+      const response = await fetch(`${BASE_API_URL}/auth/profile`, { // Use
+>>>>>>> ee96e9b901de969e0be4140b0b6c165394540444
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -79,7 +88,11 @@ export default function Profile() {
         return;
       }
 
+<<<<<<< HEAD
       const response = await fetch("http://192.168.233.196:5000/api/auth/profile", {
+=======
+      const response = await fetch(`${BASE_API_URL}/auth/profile`, { // Use
+>>>>>>> ee96e9b901de969e0be4140b0b6c165394540444
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -126,6 +139,10 @@ export default function Profile() {
       source={require('@/assets/images/bg.jpg')} // Path to your new background image
       style={styles.backgroundImage}
     >
+<<<<<<< HEAD
+=======
+      <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
+>>>>>>> ee96e9b901de969e0be4140b0b6c165394540444
       {/* Dark overlay */}
       <View style={styles.overlay}>
         <View style={styles.container}>
@@ -176,6 +193,10 @@ export default function Profile() {
           </TouchableOpacity>
         </View>
       </View>
+<<<<<<< HEAD
+=======
+      </ScrollView>
+>>>>>>> ee96e9b901de969e0be4140b0b6c165394540444
     </ImageBackground>
   );
 }
@@ -203,11 +224,20 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
+<<<<<<< HEAD
     backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent black overlay
   },
   container: {
     flex: 1,
     padding: 20,
+=======
+    height: "120%",
+    backgroundColor: "rgba(16, 18, 20, 0.5)", // Semi-transparent black overlay
+  },
+  container: {
+    flex: 1,
+    padding: 1,
+>>>>>>> ee96e9b901de969e0be4140b0b6c165394540444
     justifyContent: "center",
     alignItems: "center",
   },
@@ -215,7 +245,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 20,
   }, 
+<<<<<<< HEAD
   
+=======
+  scrollContainer: {
+    flexGrow: 3,
+  },
+>>>>>>> ee96e9b901de969e0be4140b0b6c165394540444
   profileImage: {
     width: 150, // Profile picture width
     height: 150, // Profile picture height
@@ -283,6 +319,12 @@ const styles = StyleSheet.create({
   loaderContainer: {
     flex: 1,
     justifyContent: "center",
+<<<<<<< HEAD
     alignItems: "center",
+=======
+    alignItems: "left",
+>>>>>>> ee96e9b901de969e0be4140b0b6c165394540444
   },
 });
+
+
